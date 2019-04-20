@@ -8,13 +8,12 @@ Build a neural network for two different datasets. We chose two different datase
 **Database of handwritten digits**
 Our motivation was to be able to predict a **handwritten number/digit** with high accuracy.
 
-### HASYv2 
+### [HASYv2](https://mafiadoc.com/the-hasyv2-dataset-arxiv_5a0c183b1723dda02c95fe11.html) 
 **Database of handwritten mathematical symbols**
 Our motivation was to be able to predict a **handwritten mathematical symbol or letter** with high accuracy if given a 32x32 image.
 
 ## Learning & Understanding
-We used the first chapter of the book Neural Networks and Deep Learning from this website pdf source http://neuralnetworksanddeeplearning.com/chap1.html.
-In addition to this learning resource, we used knowledge from our class notes and other online blogs to build our neural network and calculus
+We used the first chapter of the book Neural Networks and Deep Learning from this website pdf source [BOOK](http://neuralnetworksanddeeplearning.com/chap1.html). In addition to this learning resource, we used knowledge from our class notes and other online blogs to build our neural network and calculus
 based back propagation algorithm.
 
 ## Understanding the Datasets
