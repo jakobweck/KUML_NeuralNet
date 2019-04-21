@@ -63,7 +63,7 @@ def main():
     testData = list(zip(testInputs, testData[1]))
 
 
-    net = network.NeuralNet([784, 30, 10]) #784 inputs (28x28px image), 30 hidden neurons, 10 outputs (0-9)
+    net = network.NeuralNet([784, 30, 10], False) #784 inputs (28x28px image), 30 hidden neurons, 10 outputs (0-9)
     net.sgd(trainingData, 30, 10, .5, testData=testData) #30 iterations, sgd batch size of 10, learning rate of .5
 
     done = False
