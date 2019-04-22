@@ -16,12 +16,12 @@ Our motivation was to be able to predict a **handwritten mathematical symbol or 
 We used the first chapter of the book Neural Networks and Deep Learning from this website pdf source [BOOK](http://neuralnetworksanddeeplearning.com/chap1.html). In addition to this learning resource, we used knowledge from our class notes and other online blogs to build our neural network and calculus
 based back propagation algorithm. 
 
-Although our neural network implementation should be capable of classifying the HASYv2 symbols, we have not yet identified the exact network parameters necessary to produce acceptable accuracy. The parameters are thus left to the user at the command line. An explanation of these parameters is below in the 'How To Run' section.
+Our neural network implementation of HASYv2 leaves the network parameters up to the user, as we found no perfectly-optimized set of parameters. One set of parameters which achieves >50% success on the test set is `python hasyrecog.py 2 30 30 200 .8 0 1`, and this set will be used by default if no parameters are input.
 
 ## Understanding the Datasets
 
 ### Understanding The Data
-Both of the datasets we worked with contained images of handwriting, but in different contexts. The MNIST dataset purely worked with grayscale images of defined digits. On the other hand, the HASYv2 dataset worked with far more advanced mathematical and assorted symbols in black and white. The two datasets offered some interesting differences such as the vast number of pngs for the HASYv2 set verus the given pixel arrays from the MNIST dataset. We were able to use both datasets in similar ways with our neural net algorithm. An additional discovery was made when reviewing the paper produced from the HASYv2 dataset that the authors worked with both MNIST and HASYv2. The HASYv2 is far larger with 369 classes and over 168k instances to learn and train over. 
+Both of the datasets we worked with contained images of handwriting, but in different contexts. The MNIST dataset purely worked with grayscale images of defined digits. On the other hand, the HASYv2 dataset worked with far more advanced mathematical and assorted symbols in black and white. The two datasets offered some interesting differences such as the vast number of pngs for the HASYv2 set verus the given pixel arrays from the MNIST dataset. We were able to use both datasets in similar ways with our neural net algorithm. An additional discovery was made when reviewing the paper produced from the HASYv2 dataset that the authors worked with both MNIST and HASYv2. The HASYv2 is far larger with 369 classes and over 168k instances to learn and train over. Our current implementation uses the HASYv2 test set as both training and test sets, due to the prohibitive time costs of working with the massive full test set.
 ### HASYv2 and Git LFS
 As the HASYv2 dataset is formatted as a collection of very large CSV files and a large folder of PNG images, we ran a script to simplify it to two (training and test) CSV files, which consist of only the images, expressed as an array of pixels, and the labels.
 These CSV files are too large to fit on a Git repo by default. We have used Git LFS (Large File Storage) to commit them. To download them, ensure Git LFS is installed on your system and run `git lfs install` in your local repository before fetching/cloning. If the hasyTestSet and hasyTrainingSet files you obtain are pointer files instead of large, csv-formatted data files, try running `git lfs fetch`.
@@ -40,6 +40,8 @@ python digitrecog.py
 ```
 python hasvRecog.py [number of hidden layers] [hidden layer 1 size] ... [hidden layer n size] [num. epochs] [learning rate] [lambda (regularization factor)] [sgd batch size]
 ```
+or, for default parameters:
+`python hasvRecog.py`
 
 ## Tech
 
