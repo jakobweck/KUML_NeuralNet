@@ -6,7 +6,7 @@ from PIL import Image
 import random
 import hasyNetwork
 import re
-
+import sys
 
 def imgToArray(filename):
    img = Image.open(filename).convert('L')  # convert image to 8-bit grayscale
@@ -21,6 +21,10 @@ def pPrintArr(arr):
             else:
                 line += '.'
         print(line)
+def binNot(x):
+    if x==1: return 0
+    if x==0: return 1
+    return None
 
 def digitHotVector(x):
     res = np.zeros((369,1))
@@ -29,64 +33,35 @@ def digitHotVector(x):
 def vectorMaxIndex(x):
     return x.argmax(0)
 def main():
-    # hasV = 'hasy'
-
-    # Commented Iteration Content For Classication Tasks
-    # hasVCla = 'classification-task'
-    # hasVVer = 'verification-task'
+    numHiddenLayers = int(sys.argv[1])
+    layers = [1024]
+    for i in range(2, numHiddenLayers+2):
+        layers.append(int(sys.argv[i]))
+    layers.append(369)
+    currArg = 2+numHiddenLayers
+    epochs = int(sys.argv[currArg])
+    currArg +=1
+    learningRate = float(sys.argv[currArg])
+    currArg +=1
+    lmbda = float(sys.argv[currArg])
+    currArg += 1
+    batchSize = int(sys.argv[currArg])
     
-    # for i in range(1, 10):
-        # trainingData = hasV + '/' + hasVCla + '/' + 'fold-' + str(i) + '/' + 'train.csv'
-        # testData = hasV + '/' + hasVCla + '/' + 'fold-' + str(i) + '/' + 'test.csv'
-        # trainingDF = pd.read_csv(trainingData)
-        # testDF = pd.read_csv(testData)
-
-    # hasYData = hasV + '/' + 'hasy-data-labels.csv'
-    # hasyDF = pd.read_csv(hasYData)
-    
-    # testData = hasV + '/' + hasVCla + '/' + 'fold-' + str(1) + '/' + 'test.csv'
-    # testDF = pd.read_csv(testData)
-
-    # trainingSet = []
-    # testSet = []
-    # symbolMapping = dict()
-
-    # for item in hasyDF.index:
-    #     img_path = hasyDF.ix[item][0]
-    #     symbol = hasyDF.ix[item][1]
-    #     latex = hasyDF.ix[item][2]
-    #     if not symbol in symbolMapping:
-    #         symbolMapping[symbol] = latex
-    #     u_id = hasyDF.ix[item][3]
-    #     data = imgToArray(hasV+'/'+img_path)
-    #     img_symb = (data, symbol)
-    #     trainingSet.append(img_symb)
-    #     # img = mpimg.imread(hasV+'/'+img_path)
-    #     # imgplot = plt.imshow(img)
-    #     # plt.show()
-    # for item in testDF.index:
-    #     img_path = hasyDF.ix[item][0]
-    #     symbol = hasyDF.ix[item][1]
-    #     latex = hasyDF.ix[item][2]
-    #     u_id = hasyDF.ix[item][3]
-    #     data = imgToArray(hasV+'/'+img_path)
-    #     img_symb = (data, symbol)
-    #     testSet.append(img_symb)
-    # np.savetxt("hasyTrainingSet.csv", trainingSet, delimiter=',', fmt="%s")
-    # np.savetxt("hasyTestSet.csv", testSet, delimiter=',', fmt="%s")
-
     symbolsDf = pd.read_csv("hasy/symbols.csv")
     symbols = dict()
+    symbolNames = dict()
     for item in symbolsDf.index:
         name = symbolsDf.ix[item][1]
         theirId = symbolsDf.ix[item][0]
         myId = symbolsDf.ix[item][4]
         symbols[theirId] = myId
+        symbolNames[myId] = name
     trainingSet = np.loadtxt("hasyTestSet.csv", delimiter=",")
     finalTrainingSet = []
     for arr in trainingSet:
         label, arr = arr[-1], arr[:-1]
         arr = np.divide(arr, 255.0)
+        arr = np.array([binNot(x) for x in arr])
         arr = np.reshape(arr, (1024,1))
         label = digitHotVector(symbols[label])
         finalTrainingSet.append((arr, (label)))
@@ -95,19 +70,20 @@ def main():
     for arr in testSet:
         label, arr = arr[-1], arr[:-1]
         arr = np.divide(arr, 255.0)
+        arr = np.array([binNot(x) for x in arr])
         arr = np.reshape(arr, (1024,1))
         label = (symbols[label])
         finalTestSet.append((arr, (label)))
-    net = hasyNetwork.NeuralNet([1024, 150, 369])
-    net.sgd(finalTrainingSet, 30, 10, .001, lmbda=0)
+    net = hasyNetwork.NeuralNet(layers)
+    net.sgd(finalTrainingSet, epochs, batchSize, learningRate, lmbda=lmbda)
     done = False
     while not done:
         input("Press enter to test on a random member of the training set.")
         index = np.random.randint(0, len(finalTrainingSet))
         inputImg = finalTrainingSet[index][0]
         pPrintArr(np.reshape(inputImg, (32, 32)))
-        desiredOutput = vectorMaxIndex(finalTrainingSet[index][1])
-        res = net.feedforward(inputImg)
+        desiredOutput = symbolNames[vectorMaxIndex(finalTrainingSet[index][1])]
+        res = symbolNames[net.feedforward(inputImg).argmax(0)]
         print("Correct output: " + str(desiredOutput) +". NN output: " + str(res))
 
 main()
