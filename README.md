@@ -16,7 +16,7 @@ Our motivation was to be able to predict a **handwritten mathematical symbol or 
 We used the first chapter of the book Neural Networks and Deep Learning from this website pdf source [BOOK](http://neuralnetworksanddeeplearning.com/chap1.html). In addition to this learning resource, we used knowledge from our class notes and other online blogs to build our neural network and calculus
 based back propagation algorithm. 
 
-Our neural network implementation of HASYv2 leaves the network parameters up to the user, as we found no perfectly-optimized set of parameters. One set of parameters which achieves >50% success on the test set is `python hasyrecog.py 2 30 30 200 .8 0 1`, and this set will be used by default if no parameters are input.
+Our neural network implementation of HASYv2 leaves the network parameters up to the user, as we found no perfectly-optimized set of parameters. One set of parameters which achieves >50% success on the test set after many epochs is `python hasyrecog.py 2 30 30 200 .8 0 1`, and this set will be used by default if no parameters are input.
 
 ## Understanding the Datasets
 
