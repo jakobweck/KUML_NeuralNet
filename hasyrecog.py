@@ -33,19 +33,27 @@ def digitHotVector(x):
 def vectorMaxIndex(x):
     return x.argmax(0)
 def main():
-    numHiddenLayers = int(sys.argv[1])
-    layers = [1024]
-    for i in range(2, numHiddenLayers+2):
-        layers.append(int(sys.argv[i]))
-    layers.append(369)
-    currArg = 2+numHiddenLayers
-    epochs = int(sys.argv[currArg])
-    currArg +=1
-    learningRate = float(sys.argv[currArg])
-    currArg +=1
-    lmbda = float(sys.argv[currArg])
-    currArg += 1
-    batchSize = int(sys.argv[currArg])
+    if(len(sys.argv)<6):
+        numHiddenLayers = 1
+        layers = [1024, 30, 30, 369]
+        epochs = 200
+        learningRate = .8
+        lmbda = 0 
+        batchSize = 1
+    else:
+        numHiddenLayers = int(sys.argv[1])
+        layers = [1024]
+        for i in range(2, numHiddenLayers+2):
+            layers.append(int(sys.argv[i]))
+        layers.append(369)
+        currArg = 2+numHiddenLayers
+        epochs = int(sys.argv[currArg])
+        currArg +=1
+        learningRate = float(sys.argv[currArg])
+        currArg +=1
+        lmbda = float(sys.argv[currArg])
+        currArg += 1
+        batchSize = int(sys.argv[currArg])
     
     symbolsDf = pd.read_csv("hasy/symbols.csv")
     symbols = dict()
@@ -82,8 +90,8 @@ def main():
         index = np.random.randint(0, len(finalTrainingSet))
         inputImg = finalTrainingSet[index][0]
         pPrintArr(np.reshape(inputImg, (32, 32)))
-        desiredOutput = symbolNames[vectorMaxIndex(finalTrainingSet[index][1])]
-        res = symbolNames[net.feedforward(inputImg).argmax(0)]
+        desiredOutput = symbolNames[vectorMaxIndex(finalTrainingSet[index][1])[0]]
+        res = symbolNames[net.feedforward(inputImg).argmax(0)[0]]
         print("Correct output: " + str(desiredOutput) +". NN output: " + str(res))
 
 main()
