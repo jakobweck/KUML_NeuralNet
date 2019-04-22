@@ -14,7 +14,9 @@ Our motivation was to be able to predict a **handwritten mathematical symbol or 
 
 ## Learning & Understanding
 We used the first chapter of the book Neural Networks and Deep Learning from this website pdf source [BOOK](http://neuralnetworksanddeeplearning.com/chap1.html). In addition to this learning resource, we used knowledge from our class notes and other online blogs to build our neural network and calculus
-based back propagation algorithm.
+based back propagation algorithm. 
+
+Although our neural network implementation should be capable of classifying the HASYv2 symbols, we have not yet identified the exact network parameters necessary to produce acceptable accuracy. The parameters are thus left to the user at the command line. An explanation of these parameters is below in the 'How To Run' section.
 
 ## Understanding the Datasets
 
@@ -36,7 +38,7 @@ python digitrecog.py
 
 **Run this for the HASYv2 Dataset**
 ```
-python hasvRecog.py
+python hasvRecog.py [number of hidden layers] [hidden layer 1 size] ... [hidden layer n size] [num. epochs] [learning rate] [lambda (regularization factor)] [sgd batch size]
 ```
 
 ## Tech
