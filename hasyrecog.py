@@ -12,6 +12,15 @@ def imgToArray(filename):
    img = Image.open(filename).convert('L')  # convert image to 8-bit grayscale
    data = list(img.getdata()) # convert image data to a list of integers
    return data
+def pPrintArr(arr):
+    for i in range(len(arr)):
+        line = ""
+        for j in range(len(arr[0])):
+            if arr[i][j] != 0.0:
+                line += "x"
+            else:
+                line += '.'
+        print(line)
 
 def digitHotVector(x):
     res = np.zeros((369,1))
@@ -90,5 +99,15 @@ def main():
         label = (symbols[label])
         finalTestSet.append((arr, (label)))
     net = hasyNetwork.NeuralNet([1024, 150, 369])
-    net.sgd(finalTrainingSet, 100, 10, .001, lmbda=0)
+    net.sgd(finalTrainingSet, 30, 10, .001, lmbda=0)
+    done = False
+    while not done:
+        input("Press enter to test on a random member of the training set.")
+        index = np.random.randint(0, len(finalTrainingSet))
+        inputImg = finalTrainingSet[index][0]
+        pPrintArr(np.reshape(inputImg, (32, 32)))
+        desiredOutput = vectorMaxIndex(finalTrainingSet[index][1])
+        res = net.feedforward(inputImg)
+        print("Correct output: " + str(desiredOutput) +". NN output: " + str(res))
+
 main()
