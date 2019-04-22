@@ -4,18 +4,21 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 from PIL import Image
 import random
-import network
+import hasyNetwork
 import re
+
 
 def imgToArray(filename):
    img = Image.open(filename).convert('L')  # convert image to 8-bit grayscale
-   WIDTH, HEIGHT = img.size 
    data = list(img.getdata()) # convert image data to a list of integers
    return data
 
-def stripBracket(inputStr):
-    return re.sub("\[]", '', inputStr.decode('utf-8'))
-
+def digitHotVector(x):
+    res = np.zeros((369,1))
+    res[x] = 1
+    return res
+def vectorMaxIndex(x):
+    return x.argmax(0)
 def main():
     # hasV = 'hasy'
 
@@ -76,16 +79,16 @@ def main():
         label, arr = arr[-1], arr[:-1]
         arr = np.divide(arr, 255.0)
         arr = np.reshape(arr, (1024,1))
-        label = symbols[label]
-        finalTrainingSet.append((arr, int(label)))
+        label = digitHotVector(symbols[label])
+        finalTrainingSet.append((arr, (label)))
     testSet = np.loadtxt("hasyTestSet.csv", delimiter=",")
     finalTestSet = []
     for arr in testSet:
         label, arr = arr[-1], arr[:-1]
         arr = np.divide(arr, 255.0)
         arr = np.reshape(arr, (1024,1))
-        label = symbols[label]
-        finalTestSet.append((arr, int(label)))
-    net = network.NeuralNet([1024, 100, 369]) #1024 inputs (32x32 image), 30 hidden neurons, 369 outputs
-    net.sgd(finalTrainingSet, 30, 10, .001, testData=finalTestSet)
+        label = (symbols[label])
+        finalTestSet.append((arr, (label)))
+    net = hasyNetwork.NeuralNet([1024, 150, 369])
+    net.sgd(finalTrainingSet, 100, 10, .001, lmbda=0)
 main()
